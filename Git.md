@@ -1,4 +1,5 @@
 # Git Note #
+---
 
 Before all:
 ~~~
@@ -6,14 +7,14 @@ $ git config --global user.name "Name"
 $ git config --global user.email "Email@email.com"
 ~~~
 
-### Basic commands ###
+### Basic commands
 ---
-#### One branch local ####
+#### One branch local
 
-##### 1. <code>git init</code> #####
-Initialize git repository, generate <code>./.git/</code>.
+##### 1. <code>git init</code>
+Initialize git repository, generate <code>./.git/.
 
-##### 2. <code>git add [< file >] ['\*.\*'] [.]</code> #####
+##### 2. <code>git add [< file >] ['\*.\*'] [.]</code>
 Add new files to stage.<br>
 Before committed, unstage by typing:
 ~~~
@@ -85,7 +86,6 @@ With <code>[-d]</code> we can delete a branch:
 $ git branch -d dev
 ~~~
 
-
 ##### 13. <code>git checkout < branch name ></code> #####
 Switch to < branch name >.
 With <code>[-b]</code> we can create and switch to a new branch:
@@ -115,6 +115,7 @@ $ git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Cre
 $ git lg
 ~~~
 
+<<<<<<< HEAD
 ##### 2. <code>./.git/config</code> and <code>~/.gitconfig</code> #####
 Config.
 
