@@ -1,7 +1,2 @@
-# Git test
-
-## add readme.md
-
-## after changing local name
-
-## second
+# Notes
+It's all notes about Algorithm, ML, GL, and etc in Markdown.
