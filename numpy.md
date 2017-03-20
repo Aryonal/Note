@@ -24,8 +24,8 @@ m = np.mat([[1,2],[3,4],[5,6]])
 # np.mat(ndarray)
 m = np.mat(np.zeros((3,3)))               # 3*3 zero mat
 m = np.mat(np.ones((2,4)), dtype=None)    # 2*4 ones mat, not identity mat
-m = np.mat(np.random.rand(2,2))           # 2*2 rand mat, member is float64 between 0, 1
-m = np.mat(np.random.randint(2,8,size=(2,5))) # 2*5 rand mat, member is int between 2, 8
+m = np.mat(np.random.rand(2,2))           # 2*2 rand mat, members are float64 between 0, 1
+m = np.mat(np.random.randint(2,8,size=(2,5))) # 2*5 rand mat, members are int between 2, 8
 m = np.mat(np.eye(2,2,dtyp=int))          # 2*2 identity mat
 m = np.mat(np.diag(np.array([1,2,3])))    # diagonal mat
 

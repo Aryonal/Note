@@ -83,4 +83,4 @@ for label in ax.get_xticklabels() + ax.get_yticklabels():
     label.set_fontsize(16)
     label.set_bbox(dict(facecolor='w',edgecolor='None',alpha=0.4))
 ```
-![advance](./image/matplot/advance.png)
+![advance](./image/matplotlib/advance.png)
