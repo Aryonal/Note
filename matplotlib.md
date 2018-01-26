@@ -3,7 +3,7 @@
 ### matplotlib.pyplot
 Before all:
 ```python
-import matplotlib.pyplot as pyplot
+import matplotlib.pyplot as plt
 import numpy as np
 ```
 #### 1. Basic commands
