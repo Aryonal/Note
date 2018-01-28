@@ -5,6 +5,49 @@ import numpy as np
 ```
 
 ### Array
+Generate an array
+```python
+a = np.array([1,2,3,4], dtype=np.int32)
+b = np.zeros((2,2))
+c = np.ones((3,3))
+d = np.full((4,4), .7) # fill a 2darray with .7
+print b.shape # (2,2) (row, col)
+```
+
+#### 1.Indexing
+just like what's in Matlab, but without `end`
+```python
+## a[number or list of number]
+raw_r0 = b[0,:]     # [0, 0, 0]
+raw_r1 = b[1:2, :]  #[[0, 0, 0]]
+raw_r2 = b[[2], :]  #[[0, 0, 0]]
+print raw_r0.shape  # (3, )
+print raw_r1.shape  # (1,3)
+print raw_r2.shape  # (1,3)
+
+a = np.array([[1,2,3],[4,5,6],[7,8,9],[10,11,12]])
+print a[[0,1,2],[0,1,2]]  # [1,5,9]
+```
+`arr[lst0, lst1]` means:
+```python
+# a = arr[lst0, lst1]
+a = [arr[lst0[i],lst1[i] for i in xrange(len(lst0))]
+```
+and bool Indexing
+
+```python
+
+a = np.array([1,2],[3,4],[5,6])
+bool_idx = (a > 2)                 #[[False False]
+                                   # [True  True]
+                                   # [True  True]]
+print a[bool_idx]                  #[3 4 5 6]
+print a[a > 2]                     #[3 4 5 6]
+```
+
+#### 2.Arithmetics
+\+ \- \* \/<br>
+np.dot() or a.dot(b) for vector a and b
 
 ### Matrix
 Matrix in num.py is different from array.
