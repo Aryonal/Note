@@ -91,15 +91,59 @@ fmt.Println(p.x) //1
 ```
 空指针无法重定向，即指针为零值，为 nil 时无法重定向。
 
-与 C 中的指针基本相同，但是面对结构体时加了语法糖(?)重定向，基本逻辑是对于结构体指针 `p`，如果某项操作 
+与 C 中的指针基本相同，但是面对结构体时加了语法糖(?)重定向，基本逻辑是对于结构体指针 `p`，在访问其成员或方法时与 `(*p)` 等价。
+**重定向**场景：
+1. 访问成员
+2. 访问方法
+
+其余场景下无重定向，如参数传递时。
 
 ### 4. 接口 interface
 
-
-
+接口概念同 Java 中类似，但是更加灵活，即不用显式 `implements` 一个接口，只要一个类型或结构体实现了接口定义的所有方法，就视作实现了这个接口。
+需要注意的一点是，对于如下定义
+```go
+type I interface {
+    f()
+}
+type S struct() {
+    a int
+}
+func (s S)f() {
+    //...
+}
 ```
-pass
+如下代码都是正确的
+```go
+var i I
+var s = S{1}
+
+i = s
+i = &s
 ```
+**但是** 如果方法的定义改成
+```go
+func (s *S)f() {
+    //...
+}
+```
+则接口无法接收结构体作为值传递
+```go
+var i I
+var s = S{1}
+
+//i = s // error
+i = &s
+```
+原因猜测可能是为了保护 `s` 作为结构体而不是结构体指针的数据安全。
+
+**nil接口**
+当调用接口的主体为 nil 时，不会报错！并且传入 nil 。此处印证上面的说法，即接口只是 golang 的语法糖。nil 接口只针对对 `*Struct` 实现的方法，因为 `Struct` 无法 `convert to nil`，即不存在值为 nil 的 `Struct`，因为 `Struct` 的零值是所有成员零值的集合。
+但是当接口没有指向特定结构体或类型时 nil 接口报错，因为没有明确的接口定义。
+
+**空接口**
+`interface{}` 可以保存所有类型的值，相当于 Java 中的 Object 类。
+
 
 ### 5. 数据结构 array, slice, map
 
@@ -317,52 +361,9 @@ p.method1() //OK
 s.method2() //OK
 p.method2() //OK
 ```
+两种定义方式都是对 `Struct` 实现的方法。并且无法用相同名称命名对 `Struct` 与 `*Struct` 实现的方法，即 `func (s Struct)method()` 与 `func (s *Struct)method()` 无法同时定义。因为前者是值传递，不改变结构体本身成员属性，但后者可以改变成员属性。可以理解为 OOP 中的 `getter()` 与 `setter()`。
 
-**但是** 在接口定义上，`(s Struct)` 与 `(s *Struct)` 是对两种不同 Type 的方法实现。
-对于：
-```go
-type interfc interface {
-    method() T
-}
-type MyStruct Struct
-```
-实现如下方法：
-```go
-func (s *Struct)method() {
-    //...
-}
-func (ms MyStruct)method() {
-    //...
-}
-```
-则
-```go
-var intf interfc
-var s = Struct{}
-var ms = MyStruct{}
-
-intf = &s //OK
-intf = ms //OK
-//intf = s //error, Struct没有实现method
-```
-**但是**
-
-无法用相同名称命名对 `Struct` 与 `*Struct` 实现的方法，即 `func (s Struct)method()` 与 `func (s *Struct)method()` 无法同时定义。为了防止指针调用方法时混淆。
-
-**而且**
-
-`func (s Struct)method()` 既是对 `Struct` 实现的方法，也是对 `*Struct` 实现的方法。
-
-**原因是**
-`Struct` 定义的方法在传入结构体的时候是值传递，`*Struct`为指针传递。指针可以重定向。也就是说指针在调用 `Struct` 定义的方法时，也是将结构体值传递至方法中，而不是指针传递。
-
-**nil接口**
-当调用接口的主体为 nil 时，不会报错！并且传入 nil 。此处印证上面的说法，即接口只是 golang 的语法糖。nil 接口只针对对 `*Struct` 实现的方法，因为 `Struct` 无法 `convert to nil`，即不存在值为 nil 的 `Struct`，因为 `Struct` 的零值是所有成员零值的集合。
-但是当接口没有指向特定结构体或类型时 nil 接口报错，因为没有明确的接口定义。
-
-**空接口**
-
-`interface{}` 可以保存所有类型的值，相当于 Java 中的 Object 类。
+**但是** 在接口定义上，`(s Struct)` 与 `(s *Struct)` 是对两种不同 Type 的方法实现。只实现了 `func (s Struct)method()` 接口可以接受结构体与结构体指针作为值传递，而只实现 `func (s *Struct)method()` 接口只能接受结构体指针。
 
 
 
