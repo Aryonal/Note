@@ -31,7 +31,7 @@ num2 := 1.0 //float64
 
 ### 2. 类型
 
-#### 显示类型转换
+#### 显式类型转换
 
 Go 中为显示类型转换，即不存在类似 C 中的 int, float64 等之间的隐式转换：
 ```go
@@ -137,13 +137,42 @@ i = &s
 ```
 原因猜测可能是为了保护 `s` 作为结构体而不是结构体指针的数据安全。
 
-**nil接口**
+#### nil接口
 当调用接口的主体为 nil 时，不会报错！并且传入 nil 。此处印证上面的说法，即接口只是 golang 的语法糖。nil 接口只针对对 `*Struct` 实现的方法，因为 `Struct` 无法 `convert to nil`，即不存在值为 nil 的 `Struct`，因为 `Struct` 的零值是所有成员零值的集合。
 但是当接口没有指向特定结构体或类型时 nil 接口报错，因为没有明确的接口定义。
 
-**空接口**
+#### 空接口
 `interface{}` 可以保存所有类型的值，相当于 Java 中的 Object 类。
 
+#### 类型断言
+```go
+var t[,ok] = i.(Type) //返回接口 i 的类型为 Type 的底层值 t , 以及是否与 Type 类型匹配
+```
+比如
+```go
+var i interface{} = "hello"
+
+s, ok := i.(string) //("hello" true)
+f, ok := i.(float64) //(0 false)
+```
+
+#### 类型选择
+```go
+var v = i.(type) //v 为接口 i 底层类型
+```
+比如
+```go
+var i interface{}
+switch v := i.(type) {
+    case int:
+    	//...
+    case string:
+    	//...
+    //...
+    default:
+    	//...
+}
+```
 
 ### 5. 数据结构 array, slice, map
 
@@ -307,18 +336,19 @@ c := int(a) + b
 
 ### 6. chan
 
-```c
-//TODO
-```
+表示信道
+
+### 7. mux
+
+互斥锁
+
 
 ## 三. 函数
 
 ### 1. 函数声明
 ```go
 func fun_name(para1 Type, paras ...Type) ReturnType {
-  ...
-  expr
-  ...
+  //...
 }
 //or as Type
 func(para1 Type, paras ...Type) ReturnType
@@ -337,9 +367,7 @@ make, len, cap, delete, append, copy
 方法是绑定结构体或某种类型的函数，声明如下
 ```go
 func (t Type)method_name(para1 Type, paras ...Type) ReturnType {
-  ...
-  expr
-  ...
+  //...
 }
 ```
 在调用时候可以
@@ -365,9 +393,7 @@ p.method2() //OK
 
 **但是** 在接口定义上，`(s Struct)` 与 `(s *Struct)` 是对两种不同 Type 的方法实现。只实现了 `func (s Struct)method()` 接口可以接受结构体与结构体指针作为值传递，而只实现 `func (s *Struct)method()` 接口只能接受结构体指针。
 
-
-
-## 四. 闭包 closure
+### 4. 闭包 closure
 同函数式中的闭包相同，举一个例子
 ```go
 package main
@@ -393,4 +419,157 @@ func main() {
 }
 ```
 
-## 五. 并发
+## 四. 并发
+
+### Go程 goroutine
+
+```go
+go f(x, y, z) //创建go程 运行 f
+```
+
+### 信道 channel
+信道用关键词 chan 表示
+```go
+var c = make(chan int) //创建一个传输 int 的信道
+c <- v //将 v 发送至信道 c
+v := <-c //从信道 c 接收并赋予 v
+```
+
+#### 缓冲
+带缓冲的信道，在创建时传入参数 size： `var c = make(chan int, 100)`，即缓冲区为100个 int。当缓冲区满了，发送端会阻塞。举个例子：
+```go
+ch := make(chan int, 1)
+ch <- 1
+ch <- 2
+fmt.Println(<-ch)
+fmt.Println(<-ch)
+```
+抛出 `fatal error: all goroutines are asleep - deadlock!` 。
+
+#### 关闭
+**发送端**可以关闭信道，表示不再有值会发送。向关闭的信道发送消息引发 `panic`。
+```go
+var c = make(chan int, 100)
+close(c) //关闭信道
+```
+当信道关闭且信道关闭，接收端可以通过接受一个状态判断。
+```go
+v, ok := <-c //ok 为 false，信道关闭且没有值
+```
+**语法糖(?)**：可以用 `for i := range c`不断从信道接受值，直到信道为空且关闭。
+
+#### 多信道
+可以用 `select` 实现。
+
+```go
+select {
+case v1 <- c1:
+    //...
+case v2 <- c2:
+    //...
+case c3 <- v3:
+    //...
+default:
+    //...
+}
+```
+
+代码执行到 select 时，case 语句会按照源代码的顺序被评估，且只评估一次，评估的结果会出现下面这几种情况：
+
+1. 除 default 外，如果只有一个 case 语句评估通过，那么就执行这个case里的语句；
+2. 除 default 外，如果有多个 case 语句评估通过，那么通过**伪随机**的方式随机选一个；
+3. 如果 default 外的 case 语句都没有通过评估，那么执行 default 里的语句；
+4. 如果没有 default，那么 代码块会被阻塞，直到有一个 case 通过评估；否则一直阻塞 。
+
+### 锁
+**`sync.Mutex`**
+在结构体中加入成员 `sync.Mutex`，控制对成员的同步访问。
+```go
+import (
+    "sync"
+)
+type S struct {
+    a int
+    mux Sync.Mutex
+}
+
+func main() {
+    var s = Struct{a: 1}
+    s.mux.Lock() //上锁，其他go程无法访问 s.a
+    s.mux.UnLock() //解锁
+}
+```
+
+
+## 五. 异常处理
+
+error 是一个內建接口
+
+```go
+type error interface {
+    Error() string
+}
+```
+
+当程序返回 error 时，通过判断是否为 nil ，决定是否出错。
+
+举个例子
+
+```go
+type ErrNegativeSqrt float64 //定义一个错误类型
+
+//实现接口 Error
+func (e ErrNegativeSqrt) Error() string {
+    return "cannot Sqrt negative number:" + fmt.Sprint(float64(e))
+}
+
+/*
+为什么不定义成
+func Sqrt(x float64) (float64, ErrNegativeSqrt)
+因为 ErrNegativeSqrt 类型不能为 nil, 但是 error 接口可以（指针也可以）
+*/
+func Sqrt(x float64) (float64, error) {
+    if x < 0 {
+        return 0, ErrNegativeSqrt(x)
+    }
+    
+    // s = Sqrt(x)
+    
+    return s, nil
+}
+```
+
+## 六. 标准库
+
+### 1. 接口
+
+#### io.Reader
+
+
+
+#### Stringer
+
+作用相当于 Java 中的 toString()
+
+
+
+#### Image
+
+来自包 image，定义为
+```go
+package image
+
+type Image interface {
+    ColorModel() color.Model //color.Model 接口
+    Bounds() Rectangle
+    At(x, y int) color.Color //color.Color 接口
+}
+```
+
+
+### 2. 包
+
+*关于 Go 中的包，.go 文件，文件夹的关系：*
+*- 独立程序运行入口为 `package main` 中的 `func main`*
+*- 属于同一个 package 的两个 .go 文件中，出现相同变量，函数名时，不会冲突，而是采用当前文件的定义*
+*- 包的文件组织形式为文件夹*
