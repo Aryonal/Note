@@ -39,6 +39,7 @@ genome_scores=pd.read_csv("/home/kesci/input/MovieLens/ml-latest/genome-scores.c
 genome_scores.head()
 ```
 输出为
+
 . |movieId|tagId|relevance
 ---|---|---|---
 0|1|1|0.02475
@@ -53,6 +54,7 @@ links=pd.read_csv("/home/kesci/input/MovieLens/ml-latest/links.csv")
 links.head()
 ```
 输出为
+
 . |movieId|imdbId|tmdbId
 --|--|--|--
 0|1|114709|862.0
@@ -63,6 +65,7 @@ links.head()
 
 读取 `tags.csv`
 输出为
+
 . |userId|movieId|tag|timestamp
 --|--|--|--|--
 0|1|318|narrated|1425942391
@@ -74,6 +77,7 @@ links.head()
 
 读取 `genome-tags.csv`
 输出为
+
 . |tagId|tag
 --|--|--
 0|1|007
@@ -84,6 +88,7 @@ links.head()
 
 读取 `movies.csv`
 输出为
+
 . | movieId|title|genres
 --|--|--|--
 0|1|Toy Story (1995)|Adventure Animation Children Comedy Fantasy
@@ -109,6 +114,7 @@ print (str(n_items) + ' movies')
 df[['rating', 'timestamp']].describe()
 ```
 输出为
+
  . |rating|timestamp
     --|--|--
     count|2.602429e+07|2.602429e+07
@@ -291,7 +297,7 @@ $$
 [[ 0.04153283  0.        ]
  [ 0.17578624  0.14525541]
  [ 0.02213319  0.25235164]
- ..., 
+ ...,
  [ 0.06611909  0.05766472]
  [ 0.08901085  0.13601614]
  [ 0.17624141  0.5450815 ]]
@@ -320,4 +326,3 @@ $$
 NMF-based MSE: 11.5378396642
 ```
 <!--NMF-based MSE: 11.5378396642-->
-
