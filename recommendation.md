@@ -40,12 +40,12 @@ genome_scores.head()
 ```
 输出为
 . |movieId|tagId|relevance
-  ---|---|---|---
-  0|1|1|0.02475
-  1|1|2|0.02475
-  2|1|3|0.04900
-  3|1|4|0.07750
-  4|1|5|0.12450
+---|---|---|---
+0|1|1|0.02475
+1|1|2|0.02475
+2|1|3|0.04900
+3|1|4|0.07750
+4|1|5|0.12450
 
 读取 `links.csv`
 ```python
@@ -54,43 +54,43 @@ links.head()
 ```
 输出为
 . |movieId|imdbId|tmdbId
-  --|--|--|--
-  0|1|114709|862.0
-  1|2|113497|8844.0
-  2|3|113228|15602.0
-  3|4|114885|31357.0
-  4|5|113041|11862.0
+--|--|--|--
+0|1|114709|862.0
+1|2|113497|8844.0
+2|3|113228|15602.0
+3|4|114885|31357.0
+4|5|113041|11862.0
 
 读取 `tags.csv`
 输出为
 . |userId|movieId|tag|timestamp
-  --|--|--|--|--
-  0|1|318|narrated|1425942391
-  1|20|4306|Dreamworks|1459855607
-  2|20|89302|England|1400778834
-  3|20|89302|espionage|1400778836
-  4|20|89302|jazz|1400778841
+--|--|--|--|--
+0|1|318|narrated|1425942391
+1|20|4306|Dreamworks|1459855607
+2|20|89302|England|1400778834
+3|20|89302|espionage|1400778836
+4|20|89302|jazz|1400778841
 
 
 读取 `genome-tags.csv`
 输出为
 . |tagId|tag
-  --|--|--
-  0|1|007
-  1|2|007 (series)
-  2|3|18th century
-  3|4|1920s
-  4|5|1930s
+--|--|--
+0|1|007
+1|2|007 (series)
+2|3|18th century
+3|4|1920s
+4|5|1930s
 
 读取 `movies.csv`
 输出为
 . | movieId|title|genres
-  --|--|--|--
-  0|1|Toy Story (1995)|Adventure Animation Children Comedy Fantasy
-  1|2|Jumanji (1995)|Adventure Children Fantasy
-  2|3|Grumpier Old Men (1995)|Comedy Romance
-  3|4|Waiting to Exhale (1995)|Comedy Drama Romance
-  4|5|Father of the Bride Part II (1995)|Comedy
+--|--|--|--
+0|1|Toy Story (1995)|Adventure Animation Children Comedy Fantasy
+1|2|Jumanji (1995)|Adventure Children Fantasy
+2|3|Grumpier Old Men (1995)|Comedy Romance
+3|4|Waiting to Exhale (1995)|Comedy Drama Romance
+4|5|Father of the Bride Part II (1995)|Comedy
 
 分析数据，计算ratings表中用户与电影数
 ```python
