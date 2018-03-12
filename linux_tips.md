@@ -1,5 +1,7 @@
 # Linux Tips
 
+[TOC]
+
 ### proxy
 
 1. download shadowsocks
@@ -24,9 +26,9 @@ and
 ```sh
 $ sslocal -c /path/to/config.json
 ```
-3. add to rc.local
+3. add to .profile
 ```sh
-$ sudo echo "sudo /path/to/sslocal -c /path/to/config.json > /path/to/ss.log &" >> /etc/rc.local
+$ echo "nohup /path/to/sslocal -c /path/to/config.json > /path/to/ss.log 2>&1 &" >> ~/.profile
 ```
 4. set polipo
 ```sh
@@ -57,9 +59,9 @@ $ /etc/init.d/polipo restart
 
 5. echo to .bashrc(or .zshrc)
 ```sh
-$ echo "export http_proxy='http://localhost:8123'"
-$ echo "export https_proxy='https://localhost:8123'"
-$ echo "export no_proxy='localhost,127.0.0.1,192.168.*,.localdomain.com'"
+$ echo "export http_proxy='http://localhost:8123'" >> .bashrc
+$ echo "export https_proxy='https://localhost:8123'" >> .bashrc
+$ echo "export no_proxy='localhost,127.0.0.1,192.168.*,.localdomain.com'" >> .bashrc
 ```
 
 ### .bashrc
